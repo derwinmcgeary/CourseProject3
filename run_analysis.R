@@ -32,6 +32,10 @@ vNames <- read.csv(variableNames, sep=" ", header = FALSE)
 colnames(subtrX) <- vNames[,2] # set some more logical (not brilliant) column names here
 colnames(subteX) <- vNames[,2] # it'll do for now
 
+acnames <- c("Walking", "Walking Upstairs","Walking Downstairs", "Sitting","Standing", "Laying")
+subtey$activity <- acnames[subtey$V1]
+subtry$activity <- acnames[subtry$V1]
+
 subtrX$subject <- subtr # THIS DOESN'T WORK FOR SOME REASON
 subtrX$activity <- subtry #I NEED A BETTER WAY TO MERGE THESE DATA SETS
 
