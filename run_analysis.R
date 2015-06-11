@@ -1,5 +1,6 @@
 ## Download https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 ## (if necessary)
+testing <- TRUE
 dataurl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 zipfile <- "dataset.zip"
 if(file.exists(zipfile)) { print("We already have the file") } else {
@@ -8,10 +9,9 @@ if(file.exists(zipfile)) { print("We already have the file") } else {
 
 ## unzip it
 print("files present")
-print(unzip(zipfile, list=TRUE))
-unzip(zipfile)
+if(!testing) {unzip(zipfile) } else { print("Not unzipping on a test run: set testing <- FALSE to change")}
 
-## Merge training and tests to one data set
+########################################################## Merge training and tests to one data set
 subtrFile <- "UCI HAR Dataset//train//subject_train.txt"
 subtrXFile <- "UCI HAR Dataset//train/X_train.txt"
 subtryFile <- "UCI HAR Dataset//train/y_train.txt"
@@ -22,26 +22,30 @@ variableNames <- "UCI HAR Dataset//features.txt"
 
 
 subtr <- read.csv(subtrFile,sep=" ",header = FALSE)
-subtrX <- read.csv(subtrXFile,sep=" ",header = FALSE)
+subtrX <- read.table(subtrXFile)
 subtry<- read.csv(subtryFile,sep=" ",header = FALSE)
 subte <- read.csv(subteFile,sep=" ",header = FALSE)
-subteX <- read.csv(subteXFile,sep=" ",header = FALSE)
+subteX <- read.table(subteXFile)
 subtey <- read.csv(subteyFile,sep=" ",header = FALSE)
 vNames <- read.csv(variableNames, sep=" ", header = FALSE)
 
-colnames(subtrX) <- vNames[,2] # set some more logical (not brilliant) column names here
-colnames(subteX) <- vNames[,2] # it'll do for now
+# bind the rows here, to save doing everything twice later tEst, then tRain (alphabetical)
+subtX <- rbind(subteX,subtrX)
+subt <- rbind(subte,subtr)
+subty <- rbind(subtey,subtry)
 
+colnames(subtX) <- vNames[,2] # set some more logical (not brilliant) column names here
+
+# name the activities for future reference (should probably make this a factor jobby)
 acnames <- c("Walking", "Walking Upstairs","Walking Downstairs", "Sitting","Standing", "Laying")
-subtey$activity <- acnames[subtey$V1]
-subtry$activity <- acnames[subtry$V1]
+names(subty) <- c("activity")
+subty$description <- acnames[subty$activity]
 
-subtrX$subject <- subtr # THIS DOESN'T WORK FOR SOME REASON
-subtrX$activity <- subtry #I NEED A BETTER WAY TO MERGE THESE DATA SETS
+# name this column here
+names(subt) <- c("subject")
 
-subteX$subject <-subte
-subteX$activity <- subtey
-
+# and we have one beautiful data set!
+subtX <- cbind(subt,activity = subty$activity,subtX)
 
 ## Extract only the measurements on the mean and standard deviation for each measurement. 
 
