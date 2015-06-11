@@ -1,6 +1,17 @@
+### This script downloads, merges and analyses data from Samsung S2 smartphone...
+### ... sensors as the test subjects performed different activities
+### More info on the experiment at: 
+### http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+
+### to use, simply source("run_analysis.R") in whatever directory you are using
+### to load the resulting file, "output.txt", use
+### read.table("output.txt", header = TRUE)
+### more info on this script and data in README.md and CodeBook.md
+
+
 ## Download https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 ## (if necessary)
-testing <- TRUE
+
 dataurl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 zipfile <- "dataset.zip"
 if(file.exists(zipfile)) { print("We already have the file") } else {
@@ -8,10 +19,9 @@ if(file.exists(zipfile)) { print("We already have the file") } else {
 }
 
 ## unzip it
-print("files present")
-if(!testing) {unzip(zipfile) } else { print("Not unzipping on a test run: set testing <- FALSE to change")}
+unzip(zipfile) 
 
-########################################################## Merge training and tests to one data set
+################# Merge training and tests to one data set
 subtrFile <- "UCI HAR Dataset//train//subject_train.txt"
 subtrXFile <- "UCI HAR Dataset//train/X_train.txt"
 subtryFile <- "UCI HAR Dataset//train/y_train.txt"
@@ -36,7 +46,7 @@ subty <- rbind(subtey,subtry)
 
 colnames(subtX) <- vNames[,2] # set some more logical (not brilliant) column names here
 
-# name the activities for future reference (should probably make this a factor jobby)
+# name the activities for future reference
 acnames <- c("Walking", "Walking Upstairs","Walking Downstairs", "Sitting","Standing", "Lying")
 names(subty) <- c("activity")
 subty$description <- acnames[subty$activity]
@@ -66,3 +76,4 @@ colnames(subdf) <- gsub("\\(\\)","",gsub("-","_",colnames(subdf)))  # no "()" or
 ## From the data set, create a second, independent tidy data set with the... 
 ## ...average of each variable for each activity and each subject.
 itds <- aggregate(x = subdf[3:81], list(Subject = subdf$subject,Activity = subdf$activity),mean)
+write.table(file = "output.txt", x = itds, row.name = FALSE)
