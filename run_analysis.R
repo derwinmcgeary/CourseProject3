@@ -37,7 +37,7 @@ subty <- rbind(subtey,subtry)
 colnames(subtX) <- vNames[,2] # set some more logical (not brilliant) column names here
 
 # name the activities for future reference (should probably make this a factor jobby)
-acnames <- c("Walking", "Walking Upstairs","Walking Downstairs", "Sitting","Standing", "Laying")
+acnames <- c("Walking", "Walking Upstairs","Walking Downstairs", "Sitting","Standing", "Lying")
 names(subty) <- c("activity")
 subty$description <- acnames[subty$activity]
 
@@ -48,10 +48,17 @@ names(subt) <- c("subject")
 subtX <- cbind(subt,activity = subty$activity,subtX)
 
 ## Extract only the measurements on the mean and standard deviation for each measurement. 
+meanstd <- grep("mean|std",colnames(subtX)) # create a vector for variables with "mean" or "std"
+ourset <- c(1,2,meanstd) # don't forget the first two columns, for subject and activity!
+
+subdf <- subset(subtX,select = ourset) # and this is our dataset with only means and stds
 
 ## Use descriptive activity names
+subdf$activity <- factor(subdf$activity,labels = acnames)
 
-## Appropriately label the data set with descriptive variable names. 
+## Appropriately label the data set with descriptive variable names.
+
 
 ## From the data set, create a second, independent tidy data set with the... 
 ## ...average of each variable for each activity and each subject.
+itds <- aggregate(x = subdf[3:81], list(Subject = subdf$subject,Activity = subdf$activity),mean)
