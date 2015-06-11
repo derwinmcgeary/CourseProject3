@@ -57,7 +57,11 @@ subdf <- subset(subtX,select = ourset) # and this is our dataset with only means
 subdf$activity <- factor(subdf$activity,labels = acnames)
 
 ## Appropriately label the data set with descriptive variable names.
+colnames(subdf) <- gsub("\\(\\)","",gsub("-","_",colnames(subdf)))  # no "()" or "-": both now "_"
 
+# I am not going to mess around with the names any more, because it would ...
+# ... break the link with the original data set. Right now, you can eyeball...
+# ... the columns and find out where the data came from.
 
 ## From the data set, create a second, independent tidy data set with the... 
 ## ...average of each variable for each activity and each subject.
