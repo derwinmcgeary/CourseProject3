@@ -31,8 +31,11 @@ For convenience we add column names for the measurement data from the file "feat
 
 The script then uses a column bind (cbind()) to match subject|activity|measurements. This is the aggregate object with all data.
 
-Stage 2 is to use grep() to select only those columns with mean or standard deviation data (encoded as "mean", or "std" in the column headers.
+Stage 2 is to use grep() to select only those columns with mean or standard deviation data (encoded as "mean", or "std" in the column headers. We include only mean() columns and discard meanFreq as this is not a mean of a measurement.
 
 At this stage, we remove the problematic characters "-", "(", and ")" from the column headers, and convert the "activity" column to a factor with descriptive activity names.
 
 Finally, we aggregate() the resulting, smaller, dataset by subject and activity.
+
+This results in a wide tidy data file, with one row showing all means and 
+standard deviations for each subject-activity combination.

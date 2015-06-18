@@ -58,7 +58,7 @@ names(subt) <- c("subject")
 subtX <- cbind(subt,activity = subty$activity,subtX)
 
 ## Extract only the measurements on the mean and standard deviation for each measurement. 
-meanstd <- grep("mean|std",colnames(subtX)) # create a vector for variables with "mean" or "std"
+meanstd <- grep("mean\\(|std",colnames(subtX)) # create a vector for variables with "mean" or "std"
 ourset <- c(1,2,meanstd) # don't forget the first two columns, for subject and activity!
 
 subdf <- subset(subtX,select = ourset) # and this is our dataset with only means and stds
@@ -68,6 +68,10 @@ subdf$activity <- factor(subdf$activity,labels = acnames)
 
 ## Appropriately label the data set with descriptive variable names.
 colnames(subdf) <- gsub("\\(\\)","",gsub("-","_",colnames(subdf)))  # no "()" or "-": both now "_"
+colnames(subdf) <- gsub("BodyBody","Body",colnames(subdf)) #just fixing that little typo
+
+# I discovered too late that colnames() was probably a better solution to this: no time to update CodeBook.md!
+# colnames(subdf) <- make.names(colnames(subdf))
 
 # I am not going to mess around with the names any more, because it would ...
 # ... break the link with the original data set. Right now, you can eyeball...
@@ -75,5 +79,5 @@ colnames(subdf) <- gsub("\\(\\)","",gsub("-","_",colnames(subdf)))  # no "()" or
 
 ## From the data set, create a second, independent tidy data set with the... 
 ## ...average of each variable for each activity and each subject.
-itds <- aggregate(x = subdf[3:81], list(Subject = subdf$subject,Activity = subdf$activity),mean)
+itds <- aggregate(x = subdf[3:length(colnames(subdf))], list(Subject = subdf$subject,Activity = subdf$activity),mean)
 write.table(file = "output.txt", x = itds, row.name = FALSE)
