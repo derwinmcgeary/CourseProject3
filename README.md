@@ -22,6 +22,7 @@ The data has also been divided into 'test' and 'train' subgroups, which we wish 
 
 
 We also wish to discard the Inertial Sensors data, which will be ignored henceforth.
+
 # Operations performed
 
 The script starts by binding together the 'test' and 'train' files for subjects, activities, and measurements

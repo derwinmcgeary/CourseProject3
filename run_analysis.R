@@ -39,7 +39,7 @@ subteX <- read.table(subteXFile)
 subtey <- read.csv(subteyFile,sep=" ",header = FALSE)
 vNames <- read.csv(variableNames, sep=" ", header = FALSE)
 
-# bind the rows here, to save doing everything twice later tEst, then tRain (alphabetical)
+# bind the rows here, to save doing everything twice later tEst, then tRain (alphabetical order)
 subtX <- rbind(subteX,subtrX)
 subt <- rbind(subte,subtr)
 subty <- rbind(subtey,subtry)
